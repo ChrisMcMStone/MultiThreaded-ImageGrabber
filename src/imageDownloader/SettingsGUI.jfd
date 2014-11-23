@@ -1,0 +1,42 @@
+JFDML JFormDesigner: "5.2.1.0.132" Java: "1.8.0_05" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {par t:l::p {seq l {comp label1:::p::p, space :::x, comp btnFileChoose:::p::p}, par t:l {seq t {comp lblThread:::p::p, space :::p, comp threadNoSpinner:::p:132:p}, seq t {comp btnClose:::p::p, space s:::p, comp btnSave:::p::p}}}, comp fieldPath::l:p:278:p}, space ::24:x}}"
+			"$verticalGroup": "par l {seq l {space :p:13:p, par b {comp label1::b:p::p, comp btnFileChoose::b:p::p}, space ::8:x, comp fieldPath:::p:29:p, space s:::p, par l {seq l {space :p:4:p, comp lblThread:::p::p}, comp threadNoSpinner::l:p:20:p}, space u:::p, par l {comp btnSave:::p::p, comp btnClose::l:p::p}, space ::24:x}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Path to save images: "
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblThread"
+				"text": "Max. no of threads: "
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnSave"
+				"text": "Save"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "fieldPath"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnFileChoose"
+				"text": "Choose..."
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "threadNoSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnClose"
+				"text": "Close"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 35, 0 )
+			"size": new java.awt.Dimension( 320, 210 )
+		} )
+	}
+}
