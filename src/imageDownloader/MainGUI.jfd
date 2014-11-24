@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {comp scrollPane1::::676:x, space :::p}, seq {comp save:::p:51:p, space u:::p, comp clear:::p:51:p, space ::568:x}, seq {par l {seq {comp label3:::p::p, space ::28:x, comp textField1:::p:304:p}, seq t {par l {comp label1::l:p::p, comp label2::l:p::p}, space s:::p, par l {seq {space :0:4:x, par l {seq {space :6:6:p, comp label4:::p::p, space :p:169:p, comp label5:::p::p}, comp comboBox1:::p:215:p}}, seq l {comp slider1:::p:215:p, space :0:4:x}}}}, space ::69:x, comp button1:::p::p, space :p:30:p, comp button2:::p::p, space :p:26:p}}}}"
-			"$verticalGroup": "par l {seq {space :::p, par l {comp save:::p::p, comp clear:::p::p}, space :::p, comp scrollPane1::::210:x, space s:::p, par b {comp label3::b:p::p, comp textField1::b:p::p, comp button1::b:p::p, comp button2::b:p::p}, space u:::p, par b {comp label1::b:p::p, comp comboBox1::b:p::p}, space :p:23:p, par t {comp label2:::p::p, comp slider1:::p::p}, space :::x, par b {comp label5::b:p::p, comp label4::b:p::p}, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {comp scrollPane1::::676:x, space :::p}, seq {comp save:::p:51:p, space u:::p, comp clear:::p:51:p, par l {seq {space s:::p, comp progressBar1::::544:x, space :::p}, seq l {space :p:196:p, comp lblImageProg:::p::p, space ::339:x}}}, seq {par l {seq {comp label3:::p::p, space ::28:x, comp textField1:::p:304:p}, seq t {par l {comp label1::l:p::p, comp label2::l:p::p}, space s:::p, par l {seq {space :0:4:x, par l {seq {space :6:6:p, comp label4:::p::p, space :p:169:p, comp label5:::p::p}, comp comboBox1:::p:215:p}}, seq l {comp slider1:::p:215:p, space :0:4:x}}}}, space ::69:x, comp button1:::p::p, space :p:30:p, comp button2:::p::p, space :p:26:p}}}}"
+			"$verticalGroup": "par l {seq {space :::p, par l {comp save:::p::p, comp clear:::p::p, seq t {comp lblImageProg:::p::p, space :::p, comp progressBar1:::p::p}}, space :::p, comp scrollPane1::::210:x, space s:::p, par b {comp label3::b:p::p, comp textField1::b:p::p, comp button1::b:p::p, comp button2::b:p::p}, space u:::p, par b {comp label1::b:p::p, comp comboBox1::b:p::p}, space :p:23:p, par t {comp label2:::p::p, comp slider1:::p::p}, space :::x, par b {comp label5::b:p::p, comp label4::b:p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -84,6 +84,13 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label5"
 				"text": "100"
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblImageProg"
+				"visible": false
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"

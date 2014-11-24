@@ -27,24 +27,26 @@ public class MainGUI extends JFrame {
     private JMenuItem exit;
     private JScrollPane scrollPane1;
     private JTable imageTable;
-    private DefaultTableModel model;
     private JTextField urlField;
     private JComboBox imageFormats;
     private JButton pasteURL;
     private JButton getImages;
     private JButton save;
-    private JSlider maxImages;
+    private JSlider maxImgSlider;
     private JLabel lblType;
     private JLabel lblMax;
     private JLabel lblUrl;
     private JButton clear;
+    private JLabel label4;
+    private JLabel label5;
+    private JProgressBar progressBar1;
+    private JLabel lblImageProg;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
+
     private String userDirec = System.getProperty("user.dir");
     private int threadNo = 2;
     private int maxImgNo = 50;
-
-
-    // JFormDesigner - End of variables declaration  //GEN-END:variables
-
+    private DefaultTableModel model;
 
     public MainGUI() {
         super("Image Downloader");
@@ -59,8 +61,10 @@ public class MainGUI extends JFrame {
         getImages.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new GetImage(urlField.getText(), imageFormats.getSelectedItem().toString(),
-                        model, threadNo, maxImgNo).execute();
+                progressBar1.setVisible(true);
+                new GetImage(urlField.getText(),
+                        imageFormats.getSelectedItem().toString(),
+                        model, threadNo, maxImgSlider.getValue(), progressBar1, lblImageProg).execute();
             }
         });
 
@@ -73,10 +77,11 @@ public class MainGUI extends JFrame {
                     @Override
                     protected Void doInBackground() throws Exception {
                         try {
-                            for (int i = 0; i < model.getRowCount(); i++) {
+                            int[] selectedImages = imageTable.getSelectedRows();
+                            for (int i = 0; i < selectedImages.length; i++) {
                                 String fileName = (String) model.getValueAt(i, 1);
                                 String fileEx = fileName.substring(fileName.indexOf('.') + 1, fileName.length());
-                                ImageIO.write(((RenderedImage) model.getValueAt(i, 0)), fileEx, new File(userDirec + fileName));
+                                ImageIO.write(((RenderedImage) model.getValueAt(i, 0)), fileEx, new File(userDirec + "/" + fileName));
                             }
                         } catch (IOException r) {
                             r.printStackTrace();
@@ -92,6 +97,9 @@ public class MainGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.setRowCount(0);
+                progressBar1.setValue(0);
+                progressBar1.setVisible(false);
+                lblImageProg.setText("");
             }
         });
 
@@ -131,25 +139,21 @@ public class MainGUI extends JFrame {
         settings = new JMenuItem();
         exit = new JMenuItem();
         scrollPane1 = new JScrollPane();
-        model = new DefaultTableModel(new Object[][]{}, new Object[]{"Image preview", "Name", "Size", "Resolution"});
-        imageTable = new JTable(model);
-        TableColumnModel tcM = imageTable.getColumnModel();
-        tcM.getColumn(0).setCellRenderer(new ImageCellRenderer());
-        imageTable.setRowHeight(50);
+        imageTable = new JTable();
         urlField = new JTextField();
         imageFormats = new JComboBox();
         pasteURL = new JButton();
         getImages = new JButton();
         save = new JButton();
-        maxImages = new JSlider();
-        maxImages.setMinimum(1);
-        maxImages.setMaximum(100);
-        maxImages.setMajorTickSpacing(5);
-        maxImages.setValue(maxImgNo);
+        maxImgSlider = new JSlider();
         lblType = new JLabel();
         lblMax = new JLabel();
         lblUrl = new JLabel();
         clear = new JButton();
+        label4 = new JLabel();
+        label5 = new JLabel();
+        progressBar1 = new JProgressBar();
+        lblImageProg = new JLabel();
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -178,12 +182,6 @@ public class MainGUI extends JFrame {
             scrollPane1.setViewportView(imageTable);
         }
 
-        //======== imageFormats ========
-        imageFormats.addItem("All");
-        imageFormats.addItem("jpeg");
-        imageFormats.addItem("png");
-        imageFormats.addItem("gif");
-
         //---- pasteURL ----
         pasteURL.setText("Paste");
 
@@ -207,6 +205,15 @@ public class MainGUI extends JFrame {
         clear.setToolTipText("Save selected images to specified directory");
         clear.setIcon(new ImageIcon("/home/chris/Documents/uni_yr2/SSC/Multi-threading/src/clear.png"));
 
+        //---- label4 ----
+        label4.setText("1");
+
+        //---- label5 ----
+        label5.setText("100");
+
+        //---- lblImageProg ----
+        lblImageProg.setVisible(false);
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -221,21 +228,39 @@ public class MainGUI extends JFrame {
                                                 .addComponent(save, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(clear, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-                                                .addContainerGap(568, Short.MAX_VALUE))
+                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(progressBar1, GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+                                                                .addContainerGap())
+                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                .addGap(196, 196, 196)
+                                                                .addComponent(lblImageProg)
+                                                                .addContainerGap(339, Short.MAX_VALUE))))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                                 .addComponent(lblUrl)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                                                                 .addComponent(urlField, GroupLayout.PREFERRED_SIZE, 304, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                                         .addComponent(lblType)
                                                                         .addComponent(lblMax))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                                        .addComponent(maxImages, GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
-                                                                        .addComponent(imageFormats, GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))))
+                                                                .addGap(18, 18, 18)
+                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                                .addGap(0, 4, Short.MAX_VALUE)
+                                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                                                .addGap(6, 6, 6)
+                                                                                                .addComponent(label4)
+                                                                                                .addGap(169, 169, 169)
+                                                                                                .addComponent(label5))
+                                                                                        .addComponent(imageFormats, GroupLayout.PREFERRED_SIZE, 215, GroupLayout.PREFERRED_SIZE)))
+                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                                .addComponent(maxImgSlider, GroupLayout.PREFERRED_SIZE, 215, GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(0, 4, Short.MAX_VALUE)))))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                                                 .addComponent(pasteURL)
                                                 .addGap(30, 30, 30)
@@ -248,9 +273,13 @@ public class MainGUI extends JFrame {
                                 .addContainerGap()
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addComponent(save)
-                                        .addComponent(clear))
+                                        .addComponent(clear)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                                                .addComponent(lblImageProg)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(lblUrl)
@@ -264,12 +293,35 @@ public class MainGUI extends JFrame {
                                 .addGap(23, 23, 23)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(lblMax)
-                                        .addComponent(maxImages, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(13, 13, 13))
+                                        .addComponent(maxImgSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label5)
+                                        .addComponent(label4))
+                                .addContainerGap())
         );
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+
+        model = new DefaultTableModel(new Object[][]{}, new Object[]{"Image preview", "Name", "Size", "Resolution"}) {
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex){
+                return columnIndex == 4;
+            }
+        };
+        imageTable.setModel(model);
+        imageTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        progressBar1.setVisible(false);
+        TableColumnModel tcM = imageTable.getColumnModel();
+        tcM.getColumn(0).setCellRenderer(new ImageCellRenderer());
+        imageTable.setRowHeight(50);
+        imageFormats.addItem("All");
+        imageFormats.addItem("jpeg");
+        imageFormats.addItem("png");
+        imageFormats.addItem("gif");
+        maxImgSlider.setMinimum(1);
+        maxImgSlider.setMaximum(100);
     }
 
 

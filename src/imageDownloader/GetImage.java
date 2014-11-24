@@ -25,8 +25,10 @@ public class GetImage extends SwingWorker<Void, Void> {
     private DefaultTableModel results;
     private int threadNo;
     private int maxImg;
+    private JProgressBar progressBar;
+    private JLabel lblImage;
 
-    public GetImage(String site, String type, DefaultTableModel table, int thread, int maxImage) {
+    public GetImage(String site, String type, DefaultTableModel table, int thread, int maxImage, JProgressBar bar, JLabel label) {
 
         url = site;
         if (type == "All") {
@@ -39,6 +41,8 @@ public class GetImage extends SwingWorker<Void, Void> {
         results = table;
         threadNo = thread;
         maxImg = maxImage;
+        progressBar = bar;
+        lblImage = label;
     }
 
     @Override
@@ -56,6 +60,9 @@ public class GetImage extends SwingWorker<Void, Void> {
                 size = images.size();
             }
 
+            progressBar.setMinimum(0);
+            progressBar.setMaximum(size);
+
             String[] imgUrlJobs = new String[size];
             int x = 0;
             for (Element image : images) {
@@ -69,11 +76,15 @@ public class GetImage extends SwingWorker<Void, Void> {
                 //Open a URL Stream
             }
 
+            lblImage.setVisible(true);
             ExecutorService pool = Executors.newFixedThreadPool(threadNo);
+            x = 1;
             for (String s : imgUrlJobs) {
-                pool.execute(new ImageGetter(s));
+                pool.execute(new ImageGetter(s, size));
+                x++;
             }
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error occured: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -83,9 +94,12 @@ public class GetImage extends SwingWorker<Void, Void> {
     private class ImageGetter implements Runnable {
 
         private String urlDownload;
+        private int imageSize;
 
-        public ImageGetter(String url) {
+        public ImageGetter(String url, int size) {
             urlDownload = url;
+            imageSize = size;
+
         }
 
         @Override
@@ -94,13 +108,22 @@ public class GetImage extends SwingWorker<Void, Void> {
                 URL url = new URL(urlDownload);
                 HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
                 long fileSize = httpConnection.getContentLength();
-                System.out.println(fileSize + "");
+                String fileSizeString;
+                if (fileSize > 1000) {
+                    fileSizeString = fileSize / 1000 + " Kb";
+                } else {
+                    fileSizeString = fileSize + " bytes";
+                }
+
                 String fileName = urlDownload.substring(urlDownload.lastIndexOf('/') + 1, urlDownload.length());
                 BufferedImage img = ImageIO.read(url);
                 int width = img.getWidth();
                 int height = img.getHeight();
-                results.addRow(new Object[]{img, fileName, fileSize + " bytes", width + "x" + height});
+                results.addRow(new Object[]{img, fileName, fileSizeString, width + "x" + height});
+                progressBar.setValue(progressBar.getValue() + 1);
+                lblImage.setText("Downloading image " + progressBar.getValue() + " of " + imageSize);
             } catch (IOException e) {
+                lblImage.setText("Error occured: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -108,16 +131,4 @@ public class GetImage extends SwingWorker<Void, Void> {
 }
 
 
-/* InputStream is = url.openStream();
-    OutputStream os = new FileOutputStream(destName);
 
-	byte[] b = new byte[2048];
-	int length;
-
-	while ((length = is.read(b)) != -1) {
-		os.write(b, 0, length);
-	}
-
-	is.close();
-	os.close();
-	*/
