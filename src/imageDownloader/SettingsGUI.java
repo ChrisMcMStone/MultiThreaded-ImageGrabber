@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Sat Nov 22 19:11:20 GMT 2014
- */
-
 package imageDownloader;
 
 import javax.swing.*;
@@ -11,12 +7,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
+ * Class to represent the GUI for change the program settings.
  * @author Chris Stone
  */
 public class SettingsGUI extends JFrame {
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Chris Stone
     private JLabel label1;
     private JLabel lblThread;
     private JButton btnSave;
@@ -24,10 +19,14 @@ public class SettingsGUI extends JFrame {
     private JButton btnFileChoose;
     private JSpinner threadNoSpinner;
     private JButton btnClose;
-    // JFormDesigner - End of variables declaration  //GEN-END:variables
     private int threadNo;
     private String userDirec;
 
+    /**
+     * Constructor for the settings GUI
+     * @param threadNumber current number of chosen threads
+     * @param direc current directory to save images
+     */
     public SettingsGUI(int threadNumber, String direc) {
         super("Settings");
         threadNo = threadNumber;
@@ -36,8 +35,12 @@ public class SettingsGUI extends JFrame {
         initButtons();
     }
 
+    /**
+     * Add all the functionality to the buttons
+     */
     private void initButtons() {
 
+        //Add the event handling for clicking the button to select a directory to save the images to.
         btnFileChoose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,6 +54,7 @@ public class SettingsGUI extends JFrame {
             }
         });
 
+        //Add the event handling for clicking the button to close the settings GUI.
         btnClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -58,9 +62,11 @@ public class SettingsGUI extends JFrame {
             }
         });
 
+        //Add the event handling for clicking the button to save the settings.
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //call the change settings method in the MainGUI so that the preferences are applied.
                 changeSettings((int) threadNoSpinner.getValue(), fieldPath.getText());
                 JOptionPane.showMessageDialog(null, "Preferences have been applied.");
                 dispose();
@@ -69,13 +75,21 @@ public class SettingsGUI extends JFrame {
 
     }
 
+    /**
+     * Method overidden in the MainGUI
+     * @param thNo number of threads
+     * @param direc user directory to save images
+     */
     protected void changeSettings(int thNo, String direc) {
         //This is overridden
     }
 
+    /**
+     * Add all the functionality to the buttons
+     */
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Chris Stone
+
+        //Auto generated code from use of windowbuilder.
         label1 = new JLabel();
         lblThread = new JLabel();
         btnSave = new JButton();
@@ -150,7 +164,6 @@ public class SettingsGUI extends JFrame {
         );
         pack();
         setLocationRelativeTo(getOwner());
-        // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
 
